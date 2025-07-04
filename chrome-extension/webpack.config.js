@@ -42,7 +42,13 @@ module.exports = {
     fallback: {
       "fs": false,
       "path": false,
-      "url": false
+      "url": false,
+      "crypto": false,
+      "stream": false,
+      "util": false
     }
+  },
+  experiments: {
+    asyncWebAssembly: true
   }
 };
