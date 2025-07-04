@@ -1,4 +1,5 @@
 // WebLLM関連のモック実装（実際のWebLLMは後で実装）
+// 将来的には @mlc-ai/web-llm を使用してPhi-4 miniモデルを実装予定
 class MockWebLLM {
     constructor() {
         this.isLoaded = false;
