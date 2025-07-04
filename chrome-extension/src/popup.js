@@ -147,7 +147,6 @@ class WebLLMEngine {
     }
 }
 
-// グローバル変数
 let webLLM;
 let currentTab = 'chat';
 
