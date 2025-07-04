@@ -133,18 +133,33 @@ class WebLLMEngine {
     }
 
     enableButtons() {
-        document.getElementById('sendButton').disabled = false;
-        document.getElementById('analyzePageButton').disabled = false;
-        document.getElementById('summarizePageButton').disabled = false;
-        document.getElementById('translateSelectedButton').disabled = false;
+        const buttons = [
+            'sendButton',
+            'analyzePageButton', 
+            'summarizePageButton',
+            'translateSelectedButton'
+        ];
+        
+        buttons.forEach(id => {
+            const button = document.getElementById(id);
+            if (button) button.disabled = false;
+        });
     }
 
     disableButtons() {
-        document.getElementById('sendButton').disabled = true;
-        document.getElementById('analyzePageButton').disabled = true;
-        document.getElementById('summarizePageButton').disabled = true;
-        document.getElementById('translateSelectedButton').disabled = true;
+        const buttons = [
+            'sendButton',
+            'analyzePageButton',
+            'summarizePageButton', 
+            'translateSelectedButton'
+        ];
+        
+        buttons.forEach(id => {
+            const button = document.getElementById(id);
+            if (button) button.disabled = true;
+        });
     }
+}
 }
 
 let webLLM;
