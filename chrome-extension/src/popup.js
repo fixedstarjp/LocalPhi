@@ -153,7 +153,7 @@ let currentTab = 'chat';
 
 // 初期化
 document.addEventListener('DOMContentLoaded', async () => {
-    webLLM = new MockWebLLM();
+    webLLM = new WebLLMEngine();
     
     // イベントリスナーの設定
     setupEventListeners();
