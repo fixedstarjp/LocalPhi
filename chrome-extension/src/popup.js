@@ -1,48 +1,104 @@
-// WebLLM関連のモック実装（実際のWebLLMは後で実装）
-// 将来的には @mlc-ai/web-llm を使用してPhi-4 miniモデルを実装予定
-class MockWebLLM {
+// WebLLM実装 - @mlc-ai/web-llm を使用してPhi-4 miniモデルを実装
+import { CreateMLCEngine } from '@mlc-ai/web-llm';
+
+class WebLLMEngine {
     constructor() {
+        this.engine = null;
         this.isLoaded = false;
         this.loadingProgress = 0;
+        this.modelId = "Phi-4-Mini-3.8B-Instruct-q4f32_1-MLC";
     }
 
     async loadModel() {
-        // モデル読み込みのシミュレーション
-        for (let i = 0; i <= 100; i += 10) {
-            this.loadingProgress = i;
-            await this.sleep(200);
-            this.updateLoadingProgress(i);
+        try {
+            console.log('WebLLMエンジンを初期化中...');
+            
+            // WebLLMエンジンの作成
+            this.engine = await CreateMLCEngine(
+                this.modelId,
+                {
+                    initProgressCallback: (progress) => {
+                        this.loadingProgress = progress.progress * 100;
+                        this.updateLoadingProgress(this.loadingProgress);
+                        console.log(`モデル読み込み進捗: ${this.loadingProgress.toFixed(1)}%`);
+                    }
+                }
+            );
+            
+            this.isLoaded = true;
+            this.updateModelStatus(true);
+            console.log('WebLLMエンジンの初期化が完了しました');
+            
+        } catch (error) {
+            console.error('WebLLMエンジンの初期化に失敗:', error);
+            this.updateModelStatus(false);
+            throw error;
         }
-        this.isLoaded = true;
-        this.updateModelStatus(true);
     }
 
     async chat(message) {
-        if (!this.isLoaded) {
-            throw new Error('モデルが読み込まれていません');
+        if (!this.isLoaded || !this.engine) {
+            throw new Error('WebLLMエンジンが初期化されていません');
         }
-        
-        // 簡単なモック応答
-        await this.sleep(1000);
-        return `こんにちは！「${message}」についてお答えします。これはモックの応答です。実際のPhi-4 miniモデルが実装されると、より高度な応答が可能になります。`;
+
+        try {
+            const messages = [
+                { role: 'user', content: message }
+            ];
+
+            const response = await this.engine.chat.completions.create({
+                messages: messages,
+                temperature: 0.7,
+                max_tokens: 1000
+            });
+
+            return response.choices[0].message.content;
+        } catch (error) {
+            console.error('チャット応答の生成に失敗:', error);
+            throw error;
+        }
     }
 
     async analyze(text) {
-        if (!this.isLoaded) {
-            throw new Error('モデルが読み込まれていません');
-        }
-        
-        await this.sleep(1500);
-        return `テキスト分析結果：\n\n文字数: ${text.length}\n単語数: ${text.split(/\s+/).length}\n\n主なトピック: ${text.substring(0, 100)}...\n\nこれはモックの分析結果です。実際のPhi-4 miniモデルでは、より詳細な分析が可能になります。`;
+        const systemPrompt = `あなたは優秀なテキスト分析者です。与えられたテキストを分析し、以下の項目について詳細にレポートしてください：
+1. 主要なトピック
+2. 文章の感情とトーン
+3. 重要なキーワード
+4. 文章の構造と特徴
+5. 要約`;
+
+        return await this.chatWithSystem(`次のテキストを分析してください：\n\n${text}`, systemPrompt);
     }
 
     async translate(text) {
-        if (!this.isLoaded) {
-            throw new Error('モデルが読み込まれていません');
+        const systemPrompt = `あなたは優秀な翻訳者です。与えられたテキストを自然で正確な日本語に翻訳してください。
+文脈を考慮し、適切な敬語レベルを使用してください。`;
+
+        return await this.chatWithSystem(`次のテキストを日本語に翻訳してください：\n\n${text}`, systemPrompt);
+    }
+
+    async chatWithSystem(message, systemPrompt) {
+        if (!this.isLoaded || !this.engine) {
+            throw new Error('WebLLMエンジンが初期化されていません');
         }
-        
-        await this.sleep(1200);
-        return `翻訳結果：\n\n元のテキスト: ${text}\n\n翻訳: [${text}の日本語翻訳]\n\nこれはモックの翻訳結果です。実際のPhi-4 miniモデルでは、より正確な翻訳が可能になります。`;
+
+        try {
+            const messages = [
+                { role: 'system', content: systemPrompt },
+                { role: 'user', content: message }
+            ];
+
+            const response = await this.engine.chat.completions.create({
+                messages: messages,
+                temperature: 0.7,
+                max_tokens: 1000
+            });
+
+            return response.choices[0].message.content;
+        } catch (error) {
+            console.error('システムプロンプト付きチャット応答の生成に失敗:', error);
+            throw error;
+        }
     }
 
     sleep(ms) {
