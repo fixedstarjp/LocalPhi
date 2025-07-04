@@ -11,11 +11,18 @@
     "@mlc-ai/web-llm": "^0.2.60"
   },
   "devDependencies": {
+    "@types/chrome": "^0.0.329",
+    "copy-webpack-plugin": "^11.0.0",
     "webpack": "^5.88.0",
-    "webpack-cli": "^5.1.4",
-    "copy-webpack-plugin": "^11.0.0"
+    "webpack-cli": "^5.1.4"
   },
-  "keywords": ["chrome-extension", "webllm", "phi-4", "ai", "local-inference"],
+  "keywords": [
+    "chrome-extension",
+    "webllm",
+    "phi-4",
+    "ai",
+    "local-inference"
+  ],
   "author": "E1 Assistant",
   "license": "MIT"
 }
