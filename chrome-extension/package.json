@@ -1,0 +1,21 @@
+{
+  "name": "ai-assistant-webllm",
+  "version": "1.0.0",
+  "description": "Chrome extension with WebLLM and Phi-4 mini for local AI inference",
+  "scripts": {
+    "build": "webpack --mode production",
+    "dev": "webpack --mode development --watch",
+    "test": "echo \"No tests yet\""
+  },
+  "dependencies": {
+    "@mlc-ai/web-llm": "^0.2.60"
+  },
+  "devDependencies": {
+    "webpack": "^5.88.0",
+    "webpack-cli": "^5.1.4",
+    "copy-webpack-plugin": "^11.0.0"
+  },
+  "keywords": ["chrome-extension", "webllm", "phi-4", "ai", "local-inference"],
+  "author": "E1 Assistant",
+  "license": "MIT"
+}
