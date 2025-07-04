@@ -160,7 +160,6 @@ class WebLLMEngine {
         });
     }
 }
-}
 
 let webLLM;
 let currentTab = 'chat';
